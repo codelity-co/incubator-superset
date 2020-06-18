@@ -21,6 +21,7 @@ These objects represent the backend of all the visualizations that
 Superset can render.
 """
 import copy
+import dataclasses
 import hashlib
 import inspect
 import logging
@@ -33,7 +34,6 @@ from datetime import datetime, timedelta
 from itertools import product
 from typing import Any, cast, Dict, List, Optional, Set, Tuple, TYPE_CHECKING, Union
 
-import dataclasses
 import geohash
 import numpy as np
 import pandas as pd
@@ -390,14 +390,15 @@ class BaseViz:
         "5 days ago" or "now").
 
         The `extra` arguments are currently used by time shift queries, since
-        different time shifts wil differ only in the `from_dttm` and `to_dttm`
-        values which are stripped.
+        different time shifts wil differ only in the `from_dttm`, `to_dttm`,
+        `inner_from_dttm`, and `inner_to_dttm` values which are stripped.
         """
         cache_dict = copy.copy(query_obj)
         cache_dict.update(extra)
 
-        for k in ["from_dttm", "to_dttm"]:
-            del cache_dict[k]
+        for k in ["from_dttm", "to_dttm", "inner_from_dttm", "inner_to_dttm"]:
+            if k in cache_dict:
+                del cache_dict[k]
 
         cache_dict["time_range"] = self.form_data.get("time_range")
         cache_dict["datasource"] = self.datasource.uid
