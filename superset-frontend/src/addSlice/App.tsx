@@ -17,25 +17,25 @@
  * under the License.
  */
 import React from 'react';
-import PropTypes from 'prop-types';
-import { ColumnTypeLabel } from '@superset-ui/chart-controls';
+import { hot } from 'react-hot-loader/root';
+import { ThemeProvider } from 'emotion-theming';
+import { supersetTheme } from '@superset-ui/style';
+import setupApp from '../setup/setupApp';
+import setupPlugins from '../setup/setupPlugins';
+import AddSliceContainer from './AddSliceContainer';
 
-import adhocMetricType from '../propTypes/adhocMetricType';
+setupApp();
+setupPlugins();
 
-const propTypes = {
-  adhocMetric: adhocMetricType,
-  showType: PropTypes.bool,
-};
+const addSliceContainer = document.getElementById('js-add-slice-container');
+const bootstrapData = JSON.parse(
+  addSliceContainer?.getAttribute('data-bootstrap') || '{}',
+);
 
-export default function AdhocMetricStaticOption({
-  adhocMetric,
-  showType = false,
-}) {
-  return (
-    <div>
-      {showType && <ColumnTypeLabel type="expression" />}
-      <span className="option-label">{adhocMetric.label}</span>
-    </div>
-  );
-}
-AdhocMetricStaticOption.propTypes = propTypes;
+const App = () => (
+  <ThemeProvider theme={supersetTheme}>
+    <AddSliceContainer datasources={bootstrapData.datasources} />
+  </ThemeProvider>
+);
+
+export default hot(App);

@@ -34,8 +34,11 @@ RUN mkdir /app \
 COPY ./requirements.txt /app/
 RUN cd /app \
         && pip install --no-cache -r requirements.txt \
+        && pip install mysqlclient \
+        && pip install psycopg2 \
         && pip install sqlalchemy-cockroachdb \
-        && pip install elasticsearch-dbapi
+        && pip install elasticsearch-dbapi \
+        && pip install redis
 
 
 ######################################################################
